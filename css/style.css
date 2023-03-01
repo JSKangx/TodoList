@@ -2,6 +2,10 @@
   display: none;
 }
 
+.done {
+  color: grey;
+}
+
 body {
   background-position: center;
 }
