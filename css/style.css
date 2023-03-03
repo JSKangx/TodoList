@@ -6,6 +6,10 @@
   color: grey;
 }
 
+.margin-left {
+  margin-left: 5px;
+}
+
 body {
   background-position: center;
 }

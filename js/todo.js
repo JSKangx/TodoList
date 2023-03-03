@@ -2,32 +2,46 @@ const toDoForm = document.querySelector("#todo_form");
 const toDoList = document.querySelector("#todo_list");
 const input = document.querySelector("#todo_form input");
 
-const toDos = [];
+let toDos = [];
 
 function deleteToDo(e) {
   const li = e.target.parentElement;
   li.remove();
+  localStorage.removeItem("todos");
 }
 
 function saveToDos() {
-  localStorage.setItem("todos", toDos);
+  localStorage.setItem("todos", JSON.stringify(toDos));
 }
 
-function addList() {
+const savedToDos = localStorage.getItem("todos");
+
+if (savedToDos) {
+  const parsedToDos = JSON.parse(savedToDos);
+  parsedToDos.forEach((element) => {
+    addList(element);
+  });
+  toDos = parsedToDos;
+}
+
+function addList(myTodo) {
   const newList = document.createElement("li");
-  const myTodo = input.value;
-  newList.innerText = myTodo;
+  const span = document.createElement("span");
+  span.innerText = myTodo;
   const button = document.createElement("button");
   button.innerText = "❌";
+  button.classList.add("margin-left");
   button.addEventListener("click", deleteToDo);
+  newList.appendChild(span);
   newList.appendChild(button);
   toDoList.appendChild(newList);
-  input.value = "";
-  toDos.push(myTodo);
 }
 
 toDoForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  addList();
+  const myTodo = input.value;
+  input.value = "";
+  addList(myTodo);
+  toDos.push(myTodo);
   saveToDos();
 });
