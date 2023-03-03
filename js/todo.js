@@ -7,7 +7,8 @@ let toDos = [];
 function deleteToDo(e) {
   const li = e.target.parentElement;
   li.remove();
-  localStorage.removeItem("todos");
+  toDos = toDos.filter((todo) => todo.id !== parseInt(li.id));
+  saveToDos();
 }
 
 function saveToDos() {
@@ -18,16 +19,15 @@ const savedToDos = localStorage.getItem("todos");
 
 if (savedToDos) {
   const parsedToDos = JSON.parse(savedToDos);
-  parsedToDos.forEach((element) => {
-    addList(element);
-  });
+  parsedToDos.forEach(addList);
   toDos = parsedToDos;
 }
 
 function addList(myTodo) {
   const newList = document.createElement("li");
   const span = document.createElement("span");
-  span.innerText = myTodo;
+  span.innerText = myTodo.text;
+  newList.id = myTodo.id;
   const button = document.createElement("button");
   button.innerText = "❌";
   button.classList.add("margin-left");
@@ -41,7 +41,11 @@ toDoForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const myTodo = input.value;
   input.value = "";
-  addList(myTodo);
-  toDos.push(myTodo);
+  const myTodoObj = {
+    text: myTodo,
+    id: Date.now(),
+  };
+  addList(myTodoObj);
+  toDos.push(myTodoObj);
   saveToDos();
 });
